@@ -8,3 +8,7 @@ Lanzar un contenedor custom de Jenkins
 Correr un pipeline con ciertas customizaciones
 crear una imagen y enviarla a nuestro registry propio
 scanear esta imagen
+
+
+----
+Correr un docker registry en el puerto 5000
