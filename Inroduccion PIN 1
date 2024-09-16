@@ -1,0 +1,10 @@
+PIN 1
+-----------
+
+PIN1
+Objetivos:
+Instalar docker
+Lanzar un contenedor custom de Jenkins
+Correr un pipeline con ciertas customizaciones
+crear una imagen y enviarla a nuestro registry propio
+scanear esta imagen
