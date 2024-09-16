@@ -3,83 +3,37 @@
 
 
 
-### Instalando Docker en Ubuntu Server 24.04.1
+### Instalando Docker last version en Ubuntu Server 24.04.1
+
+
+```bash
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+
 
 ```bash
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
 
-### File Structure
+### Jenkinks custom del repositorio de mundose
 
 ```bash
-├── authentik
-│   ├── certs
-│   ├── custom-templates
-│   ├── database
-│   ├── media
-│   │   └── public
-│   │       ├── favicon.svg
-│   │       ├── flow-backgrounds
-│   │       │   └── star-wars-poster-4k-af-1920x1080.jpg
-│   │       └── logo.png
-│   └── redis
-├── docker-compose.yml
-├── ohif
-│   ├── config
-│   │   ├── logo.png
-│   │   └── ohif.js
-│   └── nginx
-│       ├── default-ohif-nginx.conf
-│       └── ohif-nginx.conf
-├── orthanc
-│   ├── config
-│   │   ├── orthanc.json
-│   │   └── postgresql.json
-│   ├── database
-│   └── dicomImages
-├── proxy
-└── README.md
+docker run -dit -p 8080:8080 --network=host -v /var/run/docker.sock:/var/run/docker.sock --name jenkins-curso docker.io/mguazzardo/pipe-seg
 ```
 
-### Set `.env` variable for Authentik
 
-```bash
-echo "PG_PASS=$(openssl rand 36 | base64)" >> .env
-echo "AUTHENTIK_SECRET_KEY=$(openssl rand 60 | base64)" >> .env
-```
 
-### Set Orthanc UserName & Password
-> Use you favourite text editor
-```bash
-nvim ./orthanc/config/orthanc.json
-```
-```json
-   "AuthenticationEnabled": true,
-  "RegisteredUsers": {
-    "hyper": "enterlab"
-  },
-```
-
-### Create generate the base64-encoded string
-```bash
-echo -n 'hyper:enterlab' | base64.
-aHlwZXI6bWFwZHI=
-```
-
-### Update Nginx config for Ohif to pass http auth for accessing Orthanc
-Edit Nginx reverse proxy
-```bash
-nvim ./ohif/nginx/ohif.conf
-```
-and paste base64-encoded user name and password
-
-```conf
-proxy_set_header Authorization "Basic aHlwZXI6bWFwZHI=";  # Replace with base64-encoded credentials
-```
-> Whenever you access OHIF it won't ask for Orthanc auth and password. 
-
-### Spin up containers
-```bash
-docker-compose up -d
-```
