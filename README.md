@@ -36,4 +36,8 @@ docker run -dit -p 8080:8080 --network=host -v /var/run/docker.sock:/var/run/doc
 ```
 
 
+### Local Registry
 
+```bash
+docker run -d -p 5000:5000 --name local-registry registry:2
+```
